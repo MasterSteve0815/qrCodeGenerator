@@ -3,20 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR-Code Generator</title>
+    <title>QR-Code Generator mit Herz</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
         input, button { margin: 10px; padding: 10px; }
-        #qrcode { margin-top: 20px; }
+        #qr-container { position: relative; display: inline-block; margin-top: 20px; }
+        #qrcode { width: 200px; height: 200px; }
+        #heart-logo {
+            position: absolute;
+            width: 40px; /* Größe des Herz-Logos */
+            height: 40px;
+            bottom: 5px;  /* Abstand vom unteren Rand */
+            right: 5px;  /* Abstand vom rechten Rand */
+        }
     </style>
 </head>
 <body>
 
-    <h1>QR-Code Generator</h1>
+    <h1>QR-Code Generator mit Herz</h1>
     <input type="text" id="urlInput" placeholder="Gib eine URL ein">
     <button onclick="generateQR()">QR-Code erstellen</button>
-    <div id="qrcode"></div>
+    
+    <div id="qr-container">
+        <div id="qrcode"></div>
+        <img id="heart-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Coraz%C3%B3n.svg/768px-Coraz%C3%B3n.svg.png" alt="Herz-Logo">
+    </div>
 
     <script>
         function generateQR() {
@@ -26,11 +38,16 @@
                 return;
             }
             document.getElementById("qrcode").innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), {
+
+            // Neuen QR-Code erstellen
+            let qr = new QRCode(document.getElementById("qrcode"), {
                 text: url,
                 width: 200,
                 height: 200
             });
+
+            // Herz-Logo sichtbar machen
+            document.getElementById("heart-logo").style.display = "block";
         }
     </script>
 
