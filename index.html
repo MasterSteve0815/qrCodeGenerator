@@ -3,32 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR-Code Generator mit Herz</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>QR-Code mit Herz</title>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
         input, button { margin: 10px; padding: 10px; }
-        #qr-container { position: relative; display: inline-block; margin-top: 20px; }
-        #qrcode { width: 200px; height: 200px; }
-        #heart-logo {
-            position: absolute;
-            width: 40px; /* Größe des Herz-Logos */
-            height: 40px;
-            bottom: 5px;  /* Abstand vom unteren Rand */
-            right: 5px;  /* Abstand vom rechten Rand */
-        }
+        #qrcode { margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <h1>QR-Code Generator mit Herz</h1>
+    <h1>QR-Code mit Herz</h1>
     <input type="text" id="urlInput" placeholder="Gib eine URL ein">
     <button onclick="generateQR()">QR-Code erstellen</button>
-    
-    <div id="qr-container">
-        <div id="qrcode"></div>
-        <img id="heart-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Coraz%C3%B3n.svg/768px-Coraz%C3%B3n.svg.png" alt="Herz-Logo">
-    </div>
+    <div id="qrcode"></div>
 
     <script>
         function generateQR() {
@@ -37,17 +25,49 @@
                 alert("Bitte eine gültige URL eingeben!");
                 return;
             }
+
             document.getElementById("qrcode").innerHTML = "";
 
-            // Neuen QR-Code erstellen
-            let qr = new QRCode(document.getElementById("qrcode"), {
-                text: url,
-                width: 200,
-                height: 200
+            const qrCode = new QRCodeStyling({
+                width: 300,
+                height: 300,
+                data: url,
+                dotsOptions: { 
+                    type: "square",
+                    color: "#000"
+                },
+                backgroundOptions: { color: "#fff" },
+                imageOptions: { crossOrigin: "anonymous", margin: 0 },
             });
 
-            // Herz-Logo sichtbar machen
-            document.getElementById("heart-logo").style.display = "block";
+            qrCode.append(document.getElementById("qrcode"));
+
+            // Herz aus QR-Pixeln
+            setTimeout(() => {
+                let canvas = document.querySelector("#qrcode canvas");
+                let ctx = canvas.getContext("2d");
+
+                ctx.fillStyle = "#000"; // Herzfarbe (schwarz)
+                let size = 10; // Größe der Herz-Pixel
+
+                let heartPattern = [
+                    [0, 1, 0, 1, 0],
+                    [1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1],
+                    [0, 1, 1, 1, 0],
+                    [0, 0, 1, 0, 0]
+                ];
+
+                let offsetX = 220, offsetY = 220; // Position unten rechts
+
+                for (let row = 0; row < heartPattern.length; row++) {
+                    for (let col = 0; col < heartPattern[row].length; col++) {
+                        if (heartPattern[row][col] === 1) {
+                            ctx.fillRect(offsetX + col * size, offsetY + row * size, size, size);
+                        }
+                    }
+                }
+            }, 500);
         }
     </script>
 
